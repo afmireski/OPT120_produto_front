@@ -12,14 +12,22 @@
             "deviceId": "chrome",
             "env": {
                 "CHROME_EXECUTABLE": "/opt/google/chrome/chrome"
-            }
+            },
+            "args": [
+                "--dart-define-from-file",
+                "env/.env"
+            ]
         },
         {
             "name": "Flutter Emulator",
             "request": "launch",
             "type": "dart",
             "flutterMode": "debug",
-            "deviceId": "flutter_emulator"
+            "deviceId": "emulator-5554",
+            "args": [
+                "--dart-define-from-file",
+                "env/.env"
+            ]
         },
     ]
 }
