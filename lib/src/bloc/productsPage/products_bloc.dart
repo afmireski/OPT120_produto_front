@@ -19,14 +19,13 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
     ProductsFetched event,
     Emitter<ProductsState> emit,
   ) async {
-    if (state.hasReachedMax) return;
-
     try {
+
       final products = await _fetchProducts();
 
       emit(state.copyWith(
         status: ProductStatus.success,
-        products: List.of(state.products)..addAll(products),
+        products: List.empty(growable: true)..addAll(products),
         hasReachedMax: false,
       ));
       
@@ -38,10 +37,11 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
 
   Future<List<Product>> _fetchProducts() async {
     const url = '${Environment.apiUrl}/products';
+
     final response = await httpClient.get(url);
 
     if (response.statusCode == 200) {
-      return response.data!.map<Product>((dynamic json) {
+      return response.data!.map<Product>((json) {
         return Product.fromJson(json);
       }).toList();
     }

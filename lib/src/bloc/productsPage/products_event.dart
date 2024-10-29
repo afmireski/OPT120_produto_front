@@ -5,6 +5,8 @@ sealed class ProductsEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+final class ProductInit extends ProductsEvent {}
+
 final class ProductCreated extends ProductsEvent {}
 
 final class ProductUpdated extends ProductsEvent {}

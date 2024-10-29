@@ -30,16 +30,16 @@ final class Product extends Equatable {
         deletedAt,
       ];
 
-  static fromJson(Map<String, dynamic> json) {
+  static Product fromJson(Map<String, dynamic> json) {
     return Product(
       id: json['id'] as int,
       description: json['description'] as String,
       price: json['price'] as int,
       stock: json['stock'] as int,
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
+      createdAt: DateTime.parse(json['created_at']),
+      updatedAt: DateTime.parse(json['updated_at']),
       deletedAt: json['deletedAt'] != null
-          ? DateTime.parse(json['deletedAt'])
+          ? DateTime.parse(json['deleted_at'])
           : null,
     );
   }
