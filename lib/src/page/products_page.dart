@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:opt120_produto_front/src/bloc/productsPage/products_bloc.dart';
+import 'package:opt120_produto_front/src/widgets/product_card.dart';
 
 class ProductsPage extends StatefulWidget {
   ProductsPage({Key? key}) : super(key: key);
@@ -44,11 +45,9 @@ class _ProductsPageState extends State<ProductsPage> {
                   child: ListView.builder(
                       itemCount: state.products.length,
                       itemBuilder: (context, index) {
-                        return Container(
-                          color: Colors.grey[200],
-                          padding: const EdgeInsets.all(10),
-                          margin: const EdgeInsets.symmetric(vertical: 5),
-                        );
+                        var product = state.products[index];
+
+                        return ProductCard(product: product);
                       }));
             case ProductStatus.failure:
               return const Center(
