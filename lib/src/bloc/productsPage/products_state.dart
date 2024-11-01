@@ -1,21 +1,21 @@
 part of 'products_bloc.dart';
 
-enum ProductStatus { initial, loading, success, failure }
+enum ProductsPageStatus { initial, loading, success, failure }
 
 final class ProductsState extends Equatable {
 
   const ProductsState({
-    this.status = ProductStatus.initial,
+    this.status = ProductsPageStatus.initial,
     this.products = const <Product>[],
     this.hasReachedMax = false,
   });
 
-  final ProductStatus status;
+  final ProductsPageStatus status;
   final List<Product> products;
   final bool hasReachedMax;
 
   ProductsState copyWith({
-    ProductStatus? status,
+    ProductsPageStatus? status,
     List<Product>? products,
     bool? hasReachedMax,
   }) {

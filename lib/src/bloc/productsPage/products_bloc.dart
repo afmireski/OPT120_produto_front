@@ -24,14 +24,14 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
       final products = await _fetchProducts();
 
       emit(state.copyWith(
-        status: ProductStatus.success,
+        status: ProductsPageStatus.success,
         products: List.empty(growable: true)..addAll(products),
         hasReachedMax: false,
       ));
       
     } catch (e) {      
       print('Error: $e');
-      emit(state.copyWith(status: ProductStatus.failure));
+      emit(state.copyWith(status: ProductsPageStatus.failure));
     }
   }
 
