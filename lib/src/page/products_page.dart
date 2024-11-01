@@ -16,7 +16,7 @@ class _ProductsPageState extends State<ProductsPage> {
     super.initState();
 
     Future.microtask(() {
-      context.read<ProductsBloc>().add(ProductInit());
+      context.read<ProductsBloc>().add(ProductsInit());
     });
   }
 
@@ -40,7 +40,7 @@ class _ProductsPageState extends State<ProductsPage> {
         body:
             BlocBuilder<ProductsBloc, ProductsState>(builder: (context, state) {
           switch (state.status) {
-            case ProductStatus.success:
+            case ProductsPageStatus.success:
               return Center(
                   child: ListView.builder(
                       itemCount: state.products.length,
@@ -49,7 +49,7 @@ class _ProductsPageState extends State<ProductsPage> {
 
                         return ProductCard(product: product);
                       }));
-            case ProductStatus.failure:
+            case ProductsPageStatus.failure:
               return const Center(
                 child: Text('failed to fetch products'),
               );
