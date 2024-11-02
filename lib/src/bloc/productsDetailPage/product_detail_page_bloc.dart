@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:opt120_produto_front/config/environment.dart';
+import 'package:opt120_produto_front/src/models/internal_error.dart';
 import 'package:opt120_produto_front/src/models/products.dart';
 
 part 'product_detail_page_event.dart';
@@ -30,9 +31,15 @@ class ProductDetailPageBloc
         status: ProductDetailPageStatus.fetched,
         product: product,
       ));
+    } on InternalError catch (e) {
+      print('InternalError: $e');
+      emit(state.copyWith(status: ProductDetailPageStatus.failure, error: e));
     } catch (e) {
-      print('Error: $e');
-      emit(state.copyWith(status: ProductDetailPageStatus.failure));
+      print('Exception: $e');
+      emit(state.copyWith(
+        status: ProductDetailPageStatus.failure,
+        error: const InternalError(500, 'Erro ao buscar produto', 0),
+      ));
     }
   }
 
@@ -44,7 +51,7 @@ class ProductDetailPageBloc
     if (response.statusCode == 200) {
       return Product.fromJson(response.data!);
     }
-    throw Exception('error fetching product');
+    throw InternalError.fromJson(response.data!);
   }
 
   Future<void> _onDelete(
@@ -55,16 +62,32 @@ class ProductDetailPageBloc
       status: ProductDetailPageStatus.deleteRequested,
     ));
 
-    final url = '${Environment.apiUrl}/product/${this.productId}/remove';
+    try {
+      await _deleteProduct();
+
+      emit(state.copyWith(
+        status: ProductDetailPageStatus.deleted,
+      ));
+    } on InternalError catch (e) {
+      print('InternalError: $e');
+      emit(state.copyWith(status: ProductDetailPageStatus.failure, error: e));
+    } catch (e) {
+      print('Exception: $e');
+      emit(state.copyWith(
+        status: ProductDetailPageStatus.failure,
+        error: const InternalError(500, 'Erro ao deletar produto', 0),
+      ));
+    }
+  }
+
+  Future<void> _deleteProduct() async {
+    final url = '${Environment.apiUrl}/products/${this.productId}/remove';
 
     final response = await httpClient.delete(url);
 
     if (response.statusCode == 204) {
-      emit(state.copyWith(
-        status: ProductDetailPageStatus.deleted,
-      ));
       return;
     }
-    throw Exception('error fetching product');
+    throw InternalError.fromJson(response.data!);
   }
 }
