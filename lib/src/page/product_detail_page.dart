@@ -52,6 +52,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             ),
           ],
         ),
+        backgroundColor: Colors.grey[200],
         body: BlocBuilder<ProductDetailPageBloc, ProductDetailPageState>(
             builder: (context, state) {
           switch (state.status) {
@@ -59,42 +60,62 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               var product = state.product!;
 
               return Center(
+                child: Align(
+                  alignment: Alignment.topCenter,
                   child: Container(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  children: [
-                    Text(
-                      product.description,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                    height: 150,
+                    padding: const EdgeInsets.all(10),
+                    margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white,
+                      border: Border.all(
+                        color: Colors.purple[600]!,
+                        width: 2,
                       ),
                     ),
-                    const SizedBox(height: 10),
-                    Text(
-                      "R\$ ${(product.price / 100).toStringAsFixed(2)}",
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.normal,
-                      ),
+                    child: Column(
+                      children: [
+                        Text(
+                          product.description,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              "R\$ ${(product.price / 100).toStringAsFixed(2)}",
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            Text(
+                              "Em estoque ${product.stock}",
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                            Text(
+                              "Criado em ${DateFormat('dd/MM/yyyy').format(product.createdAt)}",
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            )
+                          ],
+                        )
+                      ],
                     ),
-                    Text(
-                      "Em estoque ${product.stock}",
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.normal,
-                      ),
-                    ),
-                    Text(
-                      "Criado em ${DateFormat('dd/MM/yyyy').format(product.createdAt)}",
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.normal,
-                      ),
-                    )
-                  ],
-                ),
-              ));
+                  ),
+                )
+              );
             case ProductDetailPageStatus.failure:
               return const Center(
                 child: Text('failed to fetch product'),
