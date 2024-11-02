@@ -3,8 +3,9 @@ import 'package:opt120_produto_front/src/models/products.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
+  final GestureTapCallback onTap;
 
-  const ProductCard({super.key, required this.product});
+  const ProductCard({super.key, required this.product, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +37,7 @@ class ProductCard extends StatelessWidget {
           ),
           tooltip: "Mais detalhes",
         ),
+        onTap: onTap,
       ),
     );
   }

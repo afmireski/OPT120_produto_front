@@ -7,12 +7,12 @@ import 'package:opt120_produto_front/src/models/products.dart';
 part 'product_detail_page_event.dart';
 part 'product_detail_page_state.dart';
 
-class ProductsBloc
+class ProductDetailPageBloc
     extends Bloc<ProductDetailPageEvent, ProductDetailPageState> {
   final int productId;
   final Dio httpClient;
 
-  ProductsBloc({required this.productId, required this.httpClient})
+  ProductDetailPageBloc({required this.productId, required this.httpClient})
       : super(const ProductDetailPageState()) {
     on<ProductDetailPageFetch>(_onFetched);
 
@@ -37,7 +37,7 @@ class ProductsBloc
   }
 
   Future<Product> _fetchProduct() async {
-    final url = '${Environment.apiUrl}/product/${this.productId}';
+    final url = '${Environment.apiUrl}/products/${this.productId}';
 
     final response = await httpClient.get(url);
 

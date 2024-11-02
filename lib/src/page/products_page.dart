@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:opt120_produto_front/src/bloc/productsPage/products_bloc.dart';
+import 'package:opt120_produto_front/src/main_app.dart';
 import 'package:opt120_produto_front/src/widgets/product_card.dart';
 
 class ProductsPage extends StatefulWidget {
@@ -47,7 +49,10 @@ class _ProductsPageState extends State<ProductsPage> {
                       itemBuilder: (context, index) {
                         var product = state.products[index];
 
-                        return ProductCard(product: product);
+                        return ProductCard(
+                          product: product,
+                          onTap: () => _productCardAction(product.id, context),
+                        );
                       }));
             case ProductsPageStatus.failure:
               return const Center(
@@ -59,5 +64,9 @@ class _ProductsPageState extends State<ProductsPage> {
               );
           }
         }));
+  }
+
+  _productCardAction(int productId, BuildContext context) {
+    context.go('/product/$productId');
   }
 }
