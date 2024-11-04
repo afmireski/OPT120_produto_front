@@ -18,6 +18,10 @@ class ProductDetailPageBloc
     on<ProductDetailPageFetch>(_onFetched);
 
     on<ProductDetailPageDeleteRequested>(_onDelete);
+
+    on<ProductDetailPageEditRequested>(_onEditRequested);
+
+    on<ProductDetailPageUpdateRequested>(_onUpdateRequested);
   }
 
   Future<void> _onFetched(
@@ -86,6 +90,64 @@ class ProductDetailPageBloc
     final response = await httpClient.delete(url);
 
     if (response.statusCode == 204) {
+      return;
+    }
+    throw InternalError.fromJson(response.data!);
+  }
+
+  void _onEditRequested(
+    ProductDetailPageEditRequested event,
+    Emitter<ProductDetailPageState> emit,
+  ) {
+    emit(state.copyWith(
+      status: ProductDetailPageStatus.updatedRequested,
+      tmpProduct: state.product,
+    ));
+  }
+
+  Future<void> _onUpdateRequested(
+    ProductDetailPageUpdateRequested event,
+    Emitter<ProductDetailPageState> emit,
+  ) async {
+    emit(state.copyWith(
+      status: ProductDetailPageStatus.updatedRequested,
+      tmpProduct: event.newData,
+    ));
+
+    try {
+      await _updateProduct(event.newData);
+
+      emit(state.copyWith(
+        status: ProductDetailPageStatus.updated,
+      ));
+    } on InternalError catch (e) {
+      print('InternalError: $e');
+      emit(state.copyWith(status: ProductDetailPageStatus.failure, error: e));
+    } catch (e) {
+      print('Exception: $e');
+      emit(state.copyWith(
+        status: ProductDetailPageStatus.failure,
+        error: const InternalError(500, 'Erro ao atualizar produto', 0),
+      ));
+    }
+  }
+
+  Future<void> _updateProduct(Product productData) async {
+    final url = '${Environment.apiUrl}/products/${this.productId}/update';
+
+    var data = Product.toJson(productData);
+    data.remove('id');
+    data.remove('created_at');
+    data.remove('updated_at');
+    data.remove('deleted_at');
+
+    final response = await httpClient.patch(
+      url,
+      data: data,
+      options: Options(contentType: Headers.jsonContentType),
+    );
+
+    if (response.statusCode == 200) {
       return;
     }
     throw InternalError.fromJson(response.data!);

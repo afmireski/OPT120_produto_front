@@ -9,6 +9,12 @@ final class ProductDetailPageInit extends ProductDetailPageEvent {}
 
 final class ProductDetailPageFetch extends ProductDetailPageEvent {}
 
-final class ProductDetailPageUpdateRequested extends ProductDetailPageEvent {}
+final class ProductDetailPageEditRequested extends ProductDetailPageEvent {}
+
+final class ProductDetailPageUpdateRequested extends ProductDetailPageEvent {
+  ProductDetailPageUpdateRequested(this.newData);
+
+  final Product newData;
+}
 
 final class ProductDetailPageDeleteRequested extends ProductDetailPageEvent {}
