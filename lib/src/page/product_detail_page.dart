@@ -1,4 +1,6 @@
+import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:opt120_produto_front/src/bloc/productsDetailPage/product_detail_page_bloc.dart';
@@ -77,6 +79,17 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   onOk: () {
                     context.go('/');
                   });
+            case ProductDetailPageStatus.updated:
+              return HttpDialog(
+                  httpCode: 200,
+                  message: 'Produto atualizado com sucesso',
+                  onOk: () {
+                    context
+                        .read<ProductDetailPageBloc>()
+                        .add(ProductDetailPageFetch());
+                  });
+            case ProductDetailPageStatus.updatedRequested:
+              return _updateRequestedWidget(state.tmpProduct!);
             default:
               return const Center(
                 child: CircularProgressIndicator(),
@@ -117,7 +130,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 ),
                 IconButton(
                   onPressed: () {
-                    print("Editing product");
+                    context
+                        .read<ProductDetailPageBloc>()
+                        .add(ProductDetailPageEditRequested());
                   },
                   tooltip: 'Editar produto',
                   icon: const Icon(
@@ -165,6 +180,139 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               ),
             )
           ],
+        ),
+      ),
+    ));
+  }
+
+  Widget _updateRequestedWidget(Product product) {
+    return Center(
+        child: Align(
+      alignment: Alignment.topCenter,
+      child: Container(
+        width: 300,
+        padding: const EdgeInsets.all(10),
+        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.white,
+          border: Border.all(
+            color: Colors.purple[600]!,
+            width: 2,
+          ),
+        ),
+        child: Form(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                initialValue: product.description,
+                decoration: const InputDecoration(
+                  labelText: 'Descrição',
+                  border: OutlineInputBorder(),
+                ),
+                onChanged: (value) {
+                  print("1 - ${product.toString()}");
+                  product = product.copyWith(description: value);
+                  print("2 - ${product.toString()}");
+                },
+              ),
+              const SizedBox(height: 10),
+              TextFormField(
+                initialValue: product.price.toString(),
+                keyboardType: TextInputType.number,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
+                decoration: const InputDecoration(
+                  labelText: 'Preço (centavos de R\$)',
+                  border: OutlineInputBorder(),
+                ),
+                onChanged: (value) {
+                  if (value.isEmpty) {
+                    return;
+                  }
+
+                  var price = int.parse(value);
+
+                 product = product.copyWith(price: price);
+                },
+              ),
+              const SizedBox(height: 10),
+              TextFormField(
+                initialValue: product.stock.toString(),
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
+                decoration: const InputDecoration(
+                  labelText: 'Estoque',
+                  border: OutlineInputBorder(),
+                ),
+                onChanged: (value) {
+                  if (value.isEmpty) {
+                    return;
+                  }
+                  var stock = int.parse(value);
+
+                  product = product.copyWith(stock: stock);
+                },
+              ),
+              const SizedBox(height: 10),
+              DateTimeFormField(
+                  firstDate: product.createdAt,
+                  initialPickerDateTime: product.createdAt,
+                  initialValue: product.createdAt,
+                  dateFormat: DateFormat('dd/MM/yyyy'),
+                  lastDate: DateTime.now().add(const Duration(days: 365)),
+                  decoration: const InputDecoration(
+                    labelText: 'Data de criação',
+                    border: OutlineInputBorder(),
+                  ),
+                  onChanged: (value) {
+                    product = product.copyWith(createdAt: value);
+                  }),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  OutlinedButton.icon(
+                    onPressed: () {
+                      context
+                          .read<ProductDetailPageBloc>()
+                          .add(ProductDetailPageFetch());
+                    },
+                    style: OutlinedButton.styleFrom(
+                      iconColor: Colors.red,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),                  
+                    icon: const Icon(Icons.cancel),
+                    label: const Text('Cancelar',
+                        style: TextStyle(color: Colors.red)),
+                  ),
+                  OutlinedButton.icon(
+                    onPressed: () {
+                      
+                      context
+                          .read<ProductDetailPageBloc>()
+                          .add(ProductDetailPageUpdateRequested(product));
+                    },
+                    style: OutlinedButton.styleFrom(
+                      iconColor: Colors.green,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),                  
+                    icon: const Icon(Icons.save),
+                    label: const Text('Salvar',
+                        style: TextStyle(color: Colors.green)),
+                  ),
+                ],
+              )
+            ],
+          ),
         ),
       ),
     ));
