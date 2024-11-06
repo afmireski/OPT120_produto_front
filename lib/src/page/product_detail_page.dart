@@ -211,9 +211,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   border: OutlineInputBorder(),
                 ),
                 onChanged: (value) {
-                  print("1 - ${product.toString()}");
                   product = product.copyWith(description: value);
-                  print("2 - ${product.toString()}");
                 },
               ),
               const SizedBox(height: 10),
@@ -258,11 +256,12 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               ),
               const SizedBox(height: 10),
               DateTimeFormField(
-                  firstDate: product.createdAt,
+                  firstDate: DateTime.now().subtract(const Duration(days: 365)),
                   initialPickerDateTime: product.createdAt,
                   initialValue: product.createdAt,
                   dateFormat: DateFormat('dd/MM/yyyy'),
-                  lastDate: DateTime.now().add(const Duration(days: 365)),
+                  lastDate: DateTime.now(),
+                  mode: DateTimeFieldPickerMode.date,
                   decoration: const InputDecoration(
                     labelText: 'Data de criação',
                     border: OutlineInputBorder(),

@@ -77,6 +77,10 @@ class _ProductsPageState extends State<ProductsPage> {
                 },
                 details: error.details,
               );
+            case ProductsPageStatus.empty:
+              return const Center(
+                child: Text('Infelizmente não há produtos cadastrados'),
+              );
             default:
               return const Center(
                 child: CircularProgressIndicator(),

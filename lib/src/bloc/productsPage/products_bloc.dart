@@ -22,6 +22,13 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
     try {
       final products = await _fetchProducts();
 
+      if (products.isEmpty) {
+        emit(
+          state.copyWith(status: ProductsPageStatus.empty, products: []),
+        );
+        return;
+      }
+
       emit(state.copyWith(
         status: ProductsPageStatus.success,
         products: List.empty(growable: true)..addAll(products),
@@ -52,6 +59,8 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
       return response.data!.map<Product>((json) {
         return Product.fromJson(json);
       }).toList();
+    } else if (response.statusCode == 204) {
+      return [];
     }
     throw InternalError.fromJson(response.data!);
   }
