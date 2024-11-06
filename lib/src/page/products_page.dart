@@ -32,7 +32,10 @@ class _ProductsPageState extends State<ProductsPage> {
           backgroundColor: Colors.purple[600],
           actions: [
             IconButton(
-              icon: const Icon(Icons.refresh, color: Colors.white,),
+              icon: const Icon(
+                Icons.refresh,
+                color: Colors.white,
+              ),
               onPressed: () {
                 context.read<ProductsBloc>().add(ProductsFetched());
               },
@@ -41,9 +44,13 @@ class _ProductsPageState extends State<ProductsPage> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            context.go('/product/new');
+            context.go('/new_product');
           },
-          child: const Icon(Icons.add),
+          backgroundColor: Colors.purple[300],
+          child: const Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
         ),
         body:
             BlocBuilder<ProductsBloc, ProductsState>(builder: (context, state) {

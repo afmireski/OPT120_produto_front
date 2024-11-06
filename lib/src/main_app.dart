@@ -21,6 +21,15 @@ class MainApp extends StatelessWidget {
             create: (_) =>
                 ProductsBloc(httpClient: Dio())..add(ProductsFetched()),
             child: ProductsPage()),
+      ),      
+      GoRoute(
+        path: '/new_product',
+        builder: (context, state) => BlocProvider(
+            create: (_) {
+              return NewProductPageBloc(httpClient: Dio())
+                ..add(NewProductPageInit());
+            },
+            child: const NewProductPage()),
       ),
       GoRoute(
         path: '/product/:id',
@@ -32,15 +41,6 @@ class MainApp extends StatelessWidget {
                 ..add(ProductDetailPageFetch());
             },
             child: const ProductDetailPage()),
-      ),
-      GoRoute(
-        path: '/product/new',
-        builder: (context, state) => BlocProvider(
-            create: (_) {
-              return NewProductPageBloc(httpClient: Dio())
-                ..add(NewProductPageInit());
-            },
-            child: const NewProductPage()),
       ),
     ],
   );

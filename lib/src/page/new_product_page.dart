@@ -11,20 +11,12 @@ class NewProductPage extends StatefulWidget {
 }
 
 class _NewProductPageState extends State<NewProductPage> {
-  @override
-  void initState() {
-    super.initState();
-
-    Future.microtask(() {
-      context.read<NewProductPageBloc>().add(NewProductPageInit());
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Detalhes do Produto'),
+        title: const Text('Novo Produto'),
         titleTextStyle: const TextStyle(
             color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
         backgroundColor: Colors.purple[600],
