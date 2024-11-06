@@ -2,8 +2,10 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:opt120_produto_front/src/bloc/newProductPage/new_product_page_bloc.dart';
 import 'package:opt120_produto_front/src/bloc/productsDetailPage/product_detail_page_bloc.dart';
 import 'package:opt120_produto_front/src/bloc/productsPage/products_bloc.dart';
+import 'package:opt120_produto_front/src/page/new_product_page.dart';
 import 'package:opt120_produto_front/src/page/product_detail_page.dart';
 import 'package:opt120_produto_front/src/page/products_page.dart';
 
@@ -30,6 +32,15 @@ class MainApp extends StatelessWidget {
                 ..add(ProductDetailPageFetch());
             },
             child: const ProductDetailPage()),
+      ),
+      GoRoute(
+        path: '/product/new',
+        builder: (context, state) => BlocProvider(
+            create: (_) {
+              return NewProductPageBloc(httpClient: Dio())
+                ..add(NewProductPageInit());
+            },
+            child: const NewProductPage()),
       ),
     ],
   );

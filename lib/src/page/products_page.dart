@@ -39,6 +39,12 @@ class _ProductsPageState extends State<ProductsPage> {
             ),
           ],
         ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            context.go('/product/new');
+          },
+          child: const Icon(Icons.add),
+        ),
         body:
             BlocBuilder<ProductsBloc, ProductsState>(builder: (context, state) {
           switch (state.status) {
