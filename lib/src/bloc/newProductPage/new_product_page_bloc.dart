@@ -64,6 +64,12 @@ class NewProductPageBloc
     final response = await httpClient.post(
       url,
       data: data,
+      options: Options(
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        validateStatus: (status) => status! < 600,
+      ),
     );
 
     if (response.statusCode == 201) {

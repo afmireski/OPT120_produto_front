@@ -54,7 +54,15 @@ class ProductDetailPageBloc
   Future<Product> _fetchProduct() async {
     final url = '${Environment.apiUrl}/products/${this.productId}';
 
-    final response = await httpClient.get(url);
+    final response = await httpClient.get(
+      url,
+      options: Options(
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        validateStatus: (status) => status! < 600,
+      ),
+    );
 
     if (response.statusCode == 200) {
       return Product.fromJson(response.data!);
@@ -91,7 +99,15 @@ class ProductDetailPageBloc
   Future<void> _deleteProduct() async {
     final url = '${Environment.apiUrl}/products/${this.productId}/remove';
 
-    final response = await httpClient.delete(url);
+    final response = await httpClient.delete(
+      url,
+      options: Options(
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        validateStatus: (status) => status! < 600,
+      ),
+    );
 
     if (response.statusCode == 204) {
       return;
@@ -148,7 +164,12 @@ class ProductDetailPageBloc
     final response = await httpClient.patch(
       url,
       data: data,
-      options: Options(contentType: Headers.jsonContentType),
+      options: Options(
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        validateStatus: (status) => status! < 600,
+      ),
     );
 
     if (response.statusCode == 200) {

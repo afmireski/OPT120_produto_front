@@ -3,19 +3,38 @@ import 'package:flutter/material.dart';
 class HttpDialog extends StatelessWidget {
   final int httpCode;
   final String message;
+  final List<String>? details;
   final VoidCallback onOk;
 
-  const HttpDialog({Key? key, required this.httpCode, required this.message, required this.onOk}) : super(key: key);
-
+  const HttpDialog(
+      {Key? key,
+      required this.httpCode,
+      required this.message,
+      required this.onOk,
+      this.details = const <String>[]})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    
     return AlertDialog(
       alignment: Alignment.center,
       title: Text(_title()),
       icon: _icon(),
-      content: Text(message),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(message),
+          const SizedBox(height: 10),
+            if (details != null && details!.isNotEmpty)
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: details!.map((detail) => Text(' - $detail')).toList(),
+              ),
+            ),
+        ],
+      ),
       actions: [
         TextButton(
           onPressed: onOk,
@@ -30,19 +49,23 @@ class HttpDialog extends StatelessWidget {
       case 200:
       case 201:
       case 204:
-        return const Icon(Icons.check_circle, color: Colors.green);
+        return const Icon(
+          Icons.check_circle,
+          color: Colors.green,
+          size: 30,
+        );
       case 400:
-        return Icon(Icons.warning, color: Colors.yellow[700]);
+        return Icon(Icons.warning, color: Colors.yellow[700], size: 30);
       case 401:
-        return const Icon(Icons.lock_person, color: Colors.red);
+        return const Icon(Icons.lock_person, color: Colors.red, size: 30);
       case 403:
-        return Icon(Icons.shield, color: Colors.orange[800]);
+        return Icon(Icons.shield, color: Colors.orange[800], size: 30);
       case 404:
-        return Icon(Icons.search_off, color: Colors.orange[800]);
+        return Icon(Icons.search_off, color: Colors.orange[800], size: 30);
       case 500:
-        return const Icon(Icons.public_off, color: Colors.red);
+        return const Icon(Icons.public_off, color: Colors.red, size: 30);
       default:
-        return const Icon(Icons.error, color: Colors.red);
+        return const Icon(Icons.error, color: Colors.red, size: 30);
     }
   }
 
@@ -66,5 +89,4 @@ class HttpDialog extends StatelessWidget {
         return 'Erro';
     }
   }
-
 }

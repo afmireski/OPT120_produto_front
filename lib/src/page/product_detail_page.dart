@@ -65,13 +65,15 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             case ProductDetailPageStatus.failure:
               var error = state.error!;
               return HttpDialog(
-                  httpCode: error.httpCode,
-                  message: error.message,
-                  onOk: () {
-                    context
-                        .read<ProductDetailPageBloc>()
-                        .add(ProductDetailPageFetch());
-                  });
+                httpCode: error.httpCode,
+                message: error.message,
+                onOk: () {
+                  context
+                      .read<ProductDetailPageBloc>()
+                      .add(ProductDetailPageFetch());
+                },
+                details: error.details,
+              );
             case ProductDetailPageStatus.deleted:
               return HttpDialog(
                   httpCode: 204,
@@ -329,7 +331,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             ),
             TextButton(
               onPressed: () {
-                context.read<ProductDetailPageBloc>()
+                context
+                    .read<ProductDetailPageBloc>()
                     .add(ProductDetailPageDeleteRequested());
                 Navigator.of(builderContext).pop();
               },

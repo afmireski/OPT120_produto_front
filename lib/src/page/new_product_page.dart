@@ -59,6 +59,16 @@ class _NewProductPageState extends State<NewProductPage> {
                   onOk: () {
                     context.go('/');
                   });
+            case NewProductPageStatus.failure:
+              var error = state.error!;
+              return HttpDialog(
+                httpCode: error.httpCode,
+                message: error.message,
+                onOk: () {
+                  context.read<NewProductPageBloc>().add(NewProductPageInit());
+                },
+                details: error.details,
+              );
             default:
               return const Center(
                 child: CircularProgressIndicator(),
