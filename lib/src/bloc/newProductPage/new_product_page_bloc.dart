@@ -36,6 +36,10 @@ class NewProductPageBloc
     Emitter<NewProductPageState> emit,
   ) async {
     try {
+      emit(state.copyWith(
+        status: NewProductPageStatus.loading,
+      ));
+
       await _saveProduct(event.data);
 
       emit(state.copyWith(

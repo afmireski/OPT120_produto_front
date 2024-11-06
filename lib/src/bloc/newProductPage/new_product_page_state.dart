@@ -1,6 +1,6 @@
 part of 'new_product_page_bloc.dart';
 
-enum NewProductPageStatus { initial, ready, failure, saved }
+enum NewProductPageStatus { initial, ready, failure, saved, loading }
 
 final class NewProductPageState extends Equatable {
 

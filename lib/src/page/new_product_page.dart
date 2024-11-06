@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:opt120_produto_front/src/bloc/newProductPage/new_product_page_bloc.dart';
 import 'package:opt120_produto_front/src/bloc/productsPage/products_bloc.dart';
 import 'package:opt120_produto_front/src/models/product_body.dart';
+import 'package:opt120_produto_front/src/widgets/http_dialog.dart';
 
 class NewProductPage extends StatefulWidget {
   const NewProductPage({Key? key}) : super(key: key);
@@ -45,15 +46,19 @@ class _NewProductPageState extends State<NewProductPage> {
           ),
         ],
       ),
+      backgroundColor: Colors.grey[200],
       body: BlocBuilder<NewProductPageBloc, NewProductPageState>(
         builder: (context, state) {
           switch (state.status) {
             case NewProductPageStatus.ready:
               return _newProductForm(state.productData!);
             case NewProductPageStatus.saved:
-              return const Center(
-                child: Text('Produto salvo com sucesso!'),
-              );
+              return HttpDialog(
+                  httpCode: 200,
+                  message: 'Produto cadastrado com sucesso',
+                  onOk: () {
+                    context.go('/');
+                  });
             default:
               return const Center(
                 child: CircularProgressIndicator(),
