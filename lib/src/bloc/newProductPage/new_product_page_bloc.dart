@@ -15,6 +15,8 @@ class NewProductPageBloc
   NewProductPageBloc({required this.httpClient})
       : super(const NewProductPageState()) {
     on<NewProductPageInit>(_onInit);
+
+    on<NewProductPageOnSave>(_onSave);
   }
 
   Future<void> _onInit(
@@ -22,9 +24,11 @@ class NewProductPageBloc
     Emitter<NewProductPageState> emit,
   ) async {
     emit(state.copyWith(
-      status: NewProductPageStatus.initial,
       productData: ProductBody(),
+      status: NewProductPageStatus.ready
     ));
+
+    print(state.productData);
   }
 
   Future<void> _onSave(
@@ -32,7 +36,7 @@ class NewProductPageBloc
     Emitter<NewProductPageState> emit,
   ) async {
     try {
-      await _saveProduct(state.productData!);
+      await _saveProduct(event.data);
 
       emit(state.copyWith(
         status: NewProductPageStatus.saved,
@@ -51,10 +55,11 @@ class NewProductPageBloc
 
   Future<void> _saveProduct(ProductBody product) async {
     const url = '${Environment.apiUrl}/products/new';
+    final data = ProductBody.toJson(product);
 
     final response = await httpClient.post(
       url,
-      data: ProductBody.toJson(product),
+      data: data,
     );
 
     if (response.statusCode == 201) {

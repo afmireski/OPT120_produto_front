@@ -7,5 +7,9 @@ sealed class NewProductPageEvent extends Equatable {
 
 final class NewProductPageInit extends NewProductPageEvent {}
 
-final class NewProductPageOnSave extends NewProductPageEvent {}
+final class NewProductPageOnSave extends NewProductPageEvent {
+  NewProductPageOnSave(this.data);
+
+  final ProductBody data;
+}
 
