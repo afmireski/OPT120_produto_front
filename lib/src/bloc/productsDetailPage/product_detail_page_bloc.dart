@@ -157,7 +157,6 @@ class ProductDetailPageBloc
 
     var data = Product.toJson(productData);
     data.remove('id');
-    data.remove('created_at');
     data.remove('updated_at');
     data.remove('deleted_at');
 
