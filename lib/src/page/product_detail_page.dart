@@ -170,11 +170,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             Center(
               child: IconButton(
                 alignment: Alignment.center,
-                onPressed: () {
-                  context
-                      .read<ProductDetailPageBloc>()
-                      .add(ProductDetailPageDeleteRequested());
-                },
+                onPressed: () => _showDeleteConfirmationDialog(context),
                 tooltip: 'Excluir produto',
                 icon: const Icon(Icons.delete, size: 30, color: Colors.red),
               ),
@@ -236,7 +232,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
                   var price = int.parse(value);
 
-                 product = product.copyWith(price: price);
+                  product = product.copyWith(price: price);
                 },
               ),
               const SizedBox(height: 10),
@@ -287,14 +283,13 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                    ),                  
+                    ),
                     icon: const Icon(Icons.cancel),
                     label: const Text('Cancelar',
                         style: TextStyle(color: Colors.red)),
                   ),
                   OutlinedButton.icon(
                     onPressed: () {
-                      
                       context
                           .read<ProductDetailPageBloc>()
                           .add(ProductDetailPageUpdateRequested(product));
@@ -304,7 +299,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                    ),                  
+                    ),
                     icon: const Icon(Icons.save),
                     label: const Text('Salvar',
                         style: TextStyle(color: Colors.green)),
@@ -316,5 +311,37 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         ),
       ),
     ));
+  }
+
+  Future<void> _showDeleteConfirmationDialog(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext builderContext) {
+        return AlertDialog(
+          title: const Text('Excluir Produto'),
+          content: const Text('Deseja realmente excluir este produto?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(builderContext).pop();
+              },
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () {
+                context.read<ProductDetailPageBloc>()
+                    .add(ProductDetailPageDeleteRequested());
+                Navigator.of(builderContext).pop();
+              },
+              child: const Text(
+                'Excluir',
+                style:
+                    TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

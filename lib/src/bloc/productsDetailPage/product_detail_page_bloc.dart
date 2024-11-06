@@ -29,6 +29,10 @@ class ProductDetailPageBloc
     Emitter<ProductDetailPageState> emit,
   ) async {
     try {
+      emit(state.copyWith(
+        status: ProductDetailPageStatus.loading,
+      ));
+
       final product = await _fetchProduct();
 
       emit(state.copyWith(
@@ -62,11 +66,11 @@ class ProductDetailPageBloc
     ProductDetailPageDeleteRequested event,
     Emitter<ProductDetailPageState> emit,
   ) async {
-    emit(state.copyWith(
-      status: ProductDetailPageStatus.deleteRequested,
-    ));
-
     try {
+      emit(state.copyWith(
+        status: ProductDetailPageStatus.deleteRequested,
+      ));
+
       await _deleteProduct();
 
       emit(state.copyWith(
@@ -109,12 +113,12 @@ class ProductDetailPageBloc
     ProductDetailPageUpdateRequested event,
     Emitter<ProductDetailPageState> emit,
   ) async {
-    emit(state.copyWith(
-      status: ProductDetailPageStatus.updatedRequested,
-      tmpProduct: event.newData,
-    ));
-
     try {
+      emit(state.copyWith(
+        status: ProductDetailPageStatus.loading,
+        tmpProduct: event.newData,
+      ));
+
       await _updateProduct(event.newData);
 
       emit(state.copyWith(
