@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:opt120_produto_front/config/environment.dart';
+import 'package:opt120_produto_front/src/models/internal_error.dart';
 import 'package:opt120_produto_front/src/models/products.dart';
 
 part 'products_event.dart';
@@ -24,8 +25,10 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
       emit(state.copyWith(
         status: ProductsPageStatus.success,
         products: List.empty(growable: true)..addAll(products),
-        hasReachedMax: false,
       ));
+    } on InternalError catch (e) {
+      print('InternalError: $e');
+      emit(state.copyWith(status: ProductsPageStatus.failure, error: e));
     } catch (e) {
       print('Error: $e');
       emit(state.copyWith(status: ProductsPageStatus.failure));
@@ -50,6 +53,6 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
         return Product.fromJson(json);
       }).toList();
     }
-    throw Exception('error fetching products');
+    throw InternalError.fromJson(response.data!);
   }
 }

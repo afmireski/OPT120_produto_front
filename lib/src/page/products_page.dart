@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:opt120_produto_front/src/bloc/productsPage/products_bloc.dart';
-import 'package:opt120_produto_front/src/main_app.dart';
+import 'package:opt120_produto_front/src/widgets/http_dialog.dart';
 import 'package:opt120_produto_front/src/widgets/product_card.dart';
 
 class ProductsPage extends StatefulWidget {
@@ -68,8 +68,14 @@ class _ProductsPageState extends State<ProductsPage> {
                         );
                       }));
             case ProductsPageStatus.failure:
-              return const Center(
-                child: Text('failed to fetch products'),
+              var error = state.error!;
+              return HttpDialog(
+                httpCode: error.httpCode,
+                message: error.message,
+                onOk: () {
+                  context.read<ProductsBloc>().add(ProductsFetched());
+                },
+                details: error.details,
               );
             default:
               return const Center(

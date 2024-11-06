@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:opt120_produto_front/src/bloc/newProductPage/new_product_page_bloc.dart';
-import 'package:opt120_produto_front/src/bloc/productsPage/products_bloc.dart';
 import 'package:opt120_produto_front/src/models/product_body.dart';
 import 'package:opt120_produto_front/src/widgets/http_dialog.dart';
 

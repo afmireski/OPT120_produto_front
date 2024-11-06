@@ -3,34 +3,33 @@ part of 'products_bloc.dart';
 enum ProductsPageStatus { initial, loading, success, failure }
 
 final class ProductsState extends Equatable {
-
   const ProductsState({
     this.status = ProductsPageStatus.initial,
     this.products = const <Product>[],
-    this.hasReachedMax = false,
+    this.error,
   });
 
   final ProductsPageStatus status;
   final List<Product> products;
-  final bool hasReachedMax;
+  final InternalError? error;
 
   ProductsState copyWith({
     ProductsPageStatus? status,
     List<Product>? products,
-    bool? hasReachedMax,
+    InternalError? error,
   }) {
     return ProductsState(
       status: status ?? this.status,
       products: products ?? this.products,
-      hasReachedMax: hasReachedMax ?? this.hasReachedMax,
+      error: error ?? this.error,
     );
   }
 
   @override
-  List<Object?> get props => [status, products, hasReachedMax];
+  List<Object?> get props => [status, products, error];
 
   @override
   String toString() {
-    return '''ProductsState { status: $status, hasReachedMax: $hasReachedMax, products: ${products.length} }''';
+    return '''ProductsState { status: $status, products: ${products.length} }''';
   }
 }
